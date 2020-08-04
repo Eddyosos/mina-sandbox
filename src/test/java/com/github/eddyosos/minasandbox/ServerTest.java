@@ -9,7 +9,6 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.internal.matchers.CapturingMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,7 +32,7 @@ class ServerTest {
         byte[] input = DatatypeConverter.parseHexBinary("0A090131323334C60D");
         connector.setHandler(new IoHandlerAdapter(){
             @Override
-            public void sessionOpened(IoSession session) throws Exception {
+            public void sessionOpened(IoSession session) {
                 session.write(IoBuffer.wrap(input));
                 session.closeOnFlush();
             }
