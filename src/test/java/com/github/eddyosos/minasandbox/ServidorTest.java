@@ -21,13 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class ServerTest {
+class ServidorTest {
 
     @MockBean IoHandler mockHandler;
     @Autowired IoAcceptor acceptor;
 
     @Test
-    void isSocketOpenTest() throws Exception {
+    void isSocketAbertoTest() throws Exception {
         IoConnector connector = new NioSocketConnector();
         byte[] input = DatatypeConverter.parseHexBinary("0A090131323334C60D");
         connector.setHandler(new IoHandlerAdapter(){

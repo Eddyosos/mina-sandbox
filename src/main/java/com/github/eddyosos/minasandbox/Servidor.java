@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class Server {
+public class Servidor {
 
     @Bean(initMethod = "bind", destroyMethod = "dispose")
     public IoAcceptor acceptor(IoHandler handler) {
