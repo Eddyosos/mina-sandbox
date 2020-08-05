@@ -8,13 +8,11 @@ import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.xml.bind.DatatypeConverter;
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +25,7 @@ class ServidorTest {
     @Autowired IoAcceptor acceptor;
 
     @Test
-    void isSocketAbertoTest() throws Exception {
+    void isSocketRecebendoMensagemCrua() throws Exception {
         IoConnector connector = new NioSocketConnector();
         byte[] input = DatatypeConverter.parseHexBinary("0A090131323334C60D");
         connector.setHandler(new IoHandlerAdapter(){
@@ -37,12 +35,7 @@ class ServidorTest {
                 session.closeOnFlush();
             }
         });
-        assertTrue(connector.connect(acceptor.getLocalAddress()).await(10, TimeUnit.SECONDS));
-        ArgumentCaptor<IoBuffer> captor = ArgumentCaptor.forClass(IoBuffer.class);
-        verify(mockHandler, after(Duration.ofSeconds(5).toMillis()).atLeastOnce())
-                .messageReceived(any(), captor.capture());
-        byte[] output = new byte[input.length];
-        captor.getValue().get(output);
-        assertArrayEquals(input, output);
+        assertTrue(connector.connect(acceptor.getLocalAddress()).await(1000, TimeUnit.MILLISECONDS));
+        verify(mockHandler, timeout(1000)).messageReceived(any(), isA(MensagemCrua.class));
     }
 }
