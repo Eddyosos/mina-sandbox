@@ -1,5 +1,7 @@
 package com.github.eddyosos.minasandbox;
 
+import org.apache.mina.core.buffer.IoBuffer;
+
 public class MensagemCrua {
 
     /**

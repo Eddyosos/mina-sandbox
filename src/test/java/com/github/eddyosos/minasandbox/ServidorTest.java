@@ -25,9 +25,8 @@ class ServidorTest {
 
     @Test
     void isSocketRecebendoMensagemCrua() throws Exception {
-        IoConnector connector = new NioSocketConnector();
         byte[] input = {0x0A, 0x09, 0x01, 0x31, 0x32, 0x33, 0x34, (byte) 0xC6, 0x0D};
-
+        IoConnector connector = new NioSocketConnector();
         connector.setHandler(new IoHandlerAdapter(){
             @Override
             public void sessionOpened(IoSession session) {
