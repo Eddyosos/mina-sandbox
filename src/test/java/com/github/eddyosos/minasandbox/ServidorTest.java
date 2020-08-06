@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import javax.xml.bind.DatatypeConverter;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +26,8 @@ class ServidorTest {
     @Test
     void isSocketRecebendoMensagemCrua() throws Exception {
         IoConnector connector = new NioSocketConnector();
-        byte[] input = DatatypeConverter.parseHexBinary("0A090131323334C60D");
+        byte[] input = {0x0A, 0x09, 0x01, 0x31, 0x32, 0x33, 0x34, (byte) 0xC6, 0x0D};
+
         connector.setHandler(new IoHandlerAdapter(){
             @Override
             public void sessionOpened(IoSession session) {
