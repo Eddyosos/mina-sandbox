@@ -3,9 +3,8 @@ package com.github.eddyosos.minasandbox.mensagem_crua;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MensagemCruaTest {
 
