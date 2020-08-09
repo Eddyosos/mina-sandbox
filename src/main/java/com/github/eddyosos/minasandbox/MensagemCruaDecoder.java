@@ -8,16 +8,12 @@ import org.apache.mina.filter.codec.ProtocolDecoderAdapter;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
 @Service
 public class MensagemCruaDecoder extends ProtocolDecoderAdapter {
     private static final byte MIN_MESSAGE_SIZE = 0x05;
 
     @Override
-    public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
+    public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) {
         out.write(extraiDe(in));
     }
 
@@ -36,7 +32,7 @@ public class MensagemCruaDecoder extends ProtocolDecoderAdapter {
         byte[] DATA = new byte[BYTES_VAL - MIN_MESSAGE_SIZE];
         in.get(DATA);
         byte CRC = in.get();
-        if(!isCRCvalido(BYTES, FRAME, DATA, CRC)) {
+        if(!isCRC_valido(BYTES, FRAME, DATA, CRC)) {
             throw new IllegalArgumentException("CRC não bate");
         }
         byte END = in.get();
@@ -44,7 +40,7 @@ public class MensagemCruaDecoder extends ProtocolDecoderAdapter {
         return new MensagemCrua(INIT, BYTES, FRAME, DATA, CRC, END);
     }
 
-    boolean isCRCvalido(byte BYTES, byte FRAME, byte[] DATA, byte CRC) {
+    boolean isCRC_valido(byte BYTES, byte FRAME, byte[] DATA, byte CRC) {
         byte[] crcData = new byte[DATA.length + 2];
         crcData[0] = BYTES;
         crcData[1] = FRAME;
