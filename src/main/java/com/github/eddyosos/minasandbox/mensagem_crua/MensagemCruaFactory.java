@@ -1,4 +1,4 @@
-package com.github.eddyosos.minasandbox;
+package com.github.eddyosos.minasandbox.mensagem_crua;
 
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;

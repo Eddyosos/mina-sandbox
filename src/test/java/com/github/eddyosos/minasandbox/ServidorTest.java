@@ -1,5 +1,6 @@
 package com.github.eddyosos.minasandbox;
 
+import com.github.eddyosos.minasandbox.mensagem_crua.MensagemCrua;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoConnector;
