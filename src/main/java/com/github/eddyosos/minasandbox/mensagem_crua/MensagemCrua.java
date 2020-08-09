@@ -9,34 +9,34 @@ public class MensagemCrua {
     /**
      * Indica o início da mensagem
      */
-    private byte INIT;
+    private final byte INIT;
 
     /**
      * Indica quantos bytes a mensagem vai ter (A quantidade de bytes inclui todos os campos descritos
      * aqui)
      */
-    private byte BYTES;
+    private final byte BYTES;
 
     /**
      * Indica qual é o tipo da mensagem
      */
-    private byte FRAME;
+    private final byte FRAME;
 
     /**
      * É o corpo da mensagem, quando necessário será descrito cada campo individualmente na sua
      * mensagem.
      */
-    private byte[] DATA;
+    private final byte[] DATA;
 
     /**
      * Indica o cálculo do CRC para validar se a mensagem foi recebida corretamente.
      */
-    private byte CRC;
+    private final byte CRC;
 
     /**
      * Indica o final da mensagem
      */
-    private byte END;
+    private final byte END;
 
     public MensagemCrua(IoBuffer in) {
         final byte MIN_MESSAGE_SIZE = 0x05;
@@ -88,29 +88,5 @@ public class MensagemCrua {
         buffer.put(END);
         buffer.flip();
         return buffer;
-    }
-
-    public byte getINIT() {
-        return INIT;
-    }
-
-    public byte getBYTES() {
-        return BYTES;
-    }
-
-    public byte getFRAME() {
-        return FRAME;
-    }
-
-    public byte[] getDATA() {
-        return DATA;
-    }
-
-    public byte getCRC() {
-        return CRC;
-    }
-
-    public byte getEND() {
-        return END;
     }
 }
