@@ -12,6 +12,10 @@ public class MensagemCruaEncoder extends ProtocolEncoderAdapter {
     @Override
     public void encode(IoSession session, Object message, ProtocolEncoderOutput out) {
         MensagemCrua resposta = (MensagemCrua) message;
+        out.write(extraiDe(resposta));
+    }
+
+    IoBuffer extraiDe(MensagemCrua resposta) {
         IoBuffer buffer = IoBuffer.allocate(resposta.getBYTES());
         buffer.put(resposta.getINIT());
         buffer.put(resposta.getBYTES());
@@ -19,6 +23,7 @@ public class MensagemCruaEncoder extends ProtocolEncoderAdapter {
         buffer.put(resposta.getDATA());
         buffer.put(resposta.getCRC());
         buffer.put(resposta.getEND());
-        out.write(buffer);
+        buffer.flip();
+        return buffer;
     }
 }
