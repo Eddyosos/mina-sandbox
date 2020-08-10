@@ -102,7 +102,7 @@ public class MensagemCrua {
 
     public MensagemCrua(Servidor.Codificavel mensagem) {
         INIT = INIT_ESPERADO;
-        BYTES = (byte) mensagem.getDATA().length;
+        BYTES = (byte) (mensagem.getDATA().length + MIN_MESSAGE_SIZE);
         FRAME = mensagem.getFRAME();
         DATA = mensagem.getDATA();
         CRC = calculaCRC();
