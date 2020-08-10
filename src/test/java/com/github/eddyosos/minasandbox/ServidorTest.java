@@ -1,5 +1,6 @@
 package com.github.eddyosos.minasandbox;
 
+import com.github.eddyosos.minasandbox.mensagem_info_usuario.MensagemInfoUsuarioRepositorio;
 import com.github.eddyosos.minasandbox.mensagem_texto.MensagemTextoRepositorio;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoAcceptor;
@@ -20,7 +21,9 @@ import static org.mockito.Mockito.*;
 class ServidorTest {
 
     @Autowired IoAcceptor acceptor;
+
     @Autowired MensagemTextoRepositorio mensagemTextoRepositorio;
+    @Autowired MensagemInfoUsuarioRepositorio mensagemInfoUsuarioRepositorio;
 
     @Test
     void mensagemTexto() throws Exception {
@@ -30,6 +33,19 @@ class ServidorTest {
 
         var mensagens = mensagemTextoRepositorio.findAll().iterator();
         assertEquals("Hello World", mensagens.next().getTexto());
+        assertFalse(mensagens.hasNext());
+    }
+
+    @Test
+    void informacoesUsuario() throws Exception {
+        byte[] input = {
+                0x0A, 0x15, (byte) 0xA2, 0x20, 0x7A, (byte) 0xC3, 0x0C, 0x4D, 0x69, 0x63, 0x68,
+                0x65, 0x6C, 0x20, 0x52, 0x65, 0x69, 0x70, 0x73, 0x16, 0x0D};
+        byte[] output = {0x0A, 0x05, (byte) 0xA0, 0x28, 0x0D};
+        escreveRecebeFecha(input,output);
+
+        var mensagens = mensagemInfoUsuarioRepositorio.findAll().iterator();
+        assertEquals("Michel Reips", mensagens.next().getNome());
         assertFalse(mensagens.hasNext());
     }
 

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MensagemTextoDispachante implements Servidor.Dispachante<MensagemTexto> {
+public class MensagemTextoDespachante implements Servidor.Despachante<MensagemTexto> {
 
     @Autowired MensagemTextoRepositorio repositorio;
 

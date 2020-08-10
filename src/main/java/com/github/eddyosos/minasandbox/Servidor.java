@@ -30,15 +30,15 @@ public class Servidor {
     }
 
     @Bean
-    public IoHandler handler(List<Dispachante> dispachantes){
+    public IoHandler handler(List<Despachante> dispachantes){
         var resultado = new DemuxingIoHandler();
-        for(Dispachante d : dispachantes) {
+        for(Despachante d : dispachantes) {
             resultado.addReceivedMessageHandler(d.capacidade(), d);
         }
         return resultado;
     }
 
-    public interface Dispachante<T> extends MessageHandler<T> {
+    public interface Despachante<T> extends MessageHandler<T> {
         Class<T> capacidade();
     }
 
