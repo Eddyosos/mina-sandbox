@@ -1,7 +1,8 @@
-package com.github.eddyosos.minasandbox;
+package com.github.eddyosos.minasandbox.mensagem_crua;
 
 import com.crccalc.Crc8;
 import com.crccalc.CrcCalculator;
+import com.github.eddyosos.minasandbox.Servidor;
 import org.apache.mina.core.buffer.IoBuffer;
 
 public class MensagemCrua {

@@ -1,13 +1,15 @@
 package com.github.eddyosos.minasandbox;
 
+import com.github.eddyosos.minasandbox.mensagem_crua.MensagemCrua;
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.filterchain.IoFilterChainBuilder;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.demux.DemuxingProtocolCodecFactory;
 import org.apache.mina.filter.codec.demux.MessageDecoder;
+import org.apache.mina.handler.demux.DemuxingIoHandler;
+import org.apache.mina.handler.demux.MessageHandler;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +29,17 @@ public class Servidor {
         return resultado;
     }
 
-    @Bean public IoHandlerAdapter handler(){
-        return new IoHandlerAdapter();
+    @Bean
+    public IoHandler handler(List<Dispachante> dispachantes){
+        var resultado = new DemuxingIoHandler();
+        for(Dispachante d : dispachantes) {
+            resultado.addReceivedMessageHandler(d.capacidade(), d);
+        }
+        return resultado;
+    }
+
+    public interface Dispachante<T> extends MessageHandler<T> {
+        Class<T> capacidade();
     }
 
     @Bean

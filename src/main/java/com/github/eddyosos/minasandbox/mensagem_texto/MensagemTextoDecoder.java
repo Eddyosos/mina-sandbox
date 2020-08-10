@@ -1,5 +1,8 @@
-package com.github.eddyosos.minasandbox;
+package com.github.eddyosos.minasandbox.mensagem_texto;
 
+import com.github.eddyosos.minasandbox.mensagem_crua.MensagemCrua;
+import com.github.eddyosos.minasandbox.mensagem_crua.MensagemIncompletaException;
+import com.github.eddyosos.minasandbox.mensagem_crua.MensagemInvalidaException;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
