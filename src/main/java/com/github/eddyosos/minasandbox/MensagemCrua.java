@@ -1,10 +1,13 @@
-package com.github.eddyosos.minasandbox.mensagem_crua;
+package com.github.eddyosos.minasandbox;
 
 import com.crccalc.Crc8;
 import com.crccalc.CrcCalculator;
 import org.apache.mina.core.buffer.IoBuffer;
 
 public class MensagemCrua {
+    public static final byte MIN_MESSAGE_SIZE = 0x05;
+    public static final byte INIT_ESPERADO = 0x0A;
+    public static final byte END_ESPERADO = 0x0D;
 
     /**
      * Indica o início da mensagem
@@ -38,27 +41,29 @@ public class MensagemCrua {
      */
     private final byte END;
 
-    public MensagemCrua(IoBuffer in) {
-        final byte MIN_MESSAGE_SIZE = 0x05;
 
-        if (in.remaining() < MIN_MESSAGE_SIZE) {
-            throw new IllegalArgumentException("Mensagem menor do que o mínimo esperado");
+    public MensagemCrua(IoBuffer mensagem) {
+        if (mensagem.remaining() < MIN_MESSAGE_SIZE) {
+            throw new MensagemIncompletaException("Mensagem menor do que o mínimo esperado");
         }
-        INIT = in.get();
-        if(INIT != 0x0A) throw new IllegalArgumentException("Mensagem não começa com 0x0A");
-        BYTES = in.get();
-        if(BYTES_val() < MIN_MESSAGE_SIZE || in.remaining() < BYTES_val() - 2) {
-            throw new IllegalArgumentException("Mensagem não tem o tamanho especificado no campo BYTES");
+        INIT = mensagem.get();
+        if(INIT != INIT_ESPERADO) throw new IllegalArgumentException("Mensagem não começa com 0x0A");
+        BYTES = mensagem.get();
+        if(BYTES_val() < MIN_MESSAGE_SIZE) {
+            throw new MensagemInvalidaException("Campo BYTES com valor inválido");
         }
-        FRAME = in.get();
+        if(mensagem.remaining() < BYTES_val() - 2) {
+            throw new MensagemIncompletaException("Mensagem não tem o tamanho especificado no campo BYTES");
+        }
+        FRAME = mensagem.get();
         DATA = new byte[BYTES_val() - MIN_MESSAGE_SIZE];
-        in.get(DATA);
-        CRC = in.get();
+        mensagem.get(DATA);
+        CRC = mensagem.get();
         if(!isCRC_valido()) {
-            throw new IllegalArgumentException("CRC não bate");
+            throw new MensagemInvalidaException("CRC não bate");
         }
-        END = in.get();
-        if(END != 0x0D) throw new IllegalArgumentException("Mensagem não termina me 0x0D");
+        END = mensagem.get();
+        if(END != END_ESPERADO) throw new MensagemInvalidaException("Mensagem não termina me 0x0D");
     }
 
     private int BYTES_val() {
@@ -66,11 +71,15 @@ public class MensagemCrua {
     }
 
     private boolean isCRC_valido() {
+        return CRC == calculaCRC();
+    }
+
+    private byte calculaCRC() {
         byte[] crcData = new byte[DATA.length + 2];
         crcData[0] = BYTES;
         crcData[1] = FRAME;
         System.arraycopy(DATA, 0, crcData, 2, DATA.length);
-        return CRC == (byte) crc8(crcData);
+        return (byte) crc8(crcData);
     }
 
     private long crc8(byte... data) {
@@ -88,5 +97,22 @@ public class MensagemCrua {
         buffer.put(END);
         buffer.flip();
         return buffer;
+    }
+
+    public MensagemCrua(Servidor.Codificavel mensagem) {
+        INIT = INIT_ESPERADO;
+        BYTES = (byte) mensagem.getDATA().length;
+        FRAME = mensagem.getFRAME();
+        DATA = mensagem.getDATA();
+        CRC = calculaCRC();
+        END = END_ESPERADO;
+    }
+
+    public byte getFRAME() {
+        return FRAME;
+    }
+
+    public byte[] getDATA(){
+        return DATA;
     }
 }

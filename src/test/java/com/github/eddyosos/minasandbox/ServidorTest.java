@@ -1,6 +1,6 @@
 package com.github.eddyosos.minasandbox;
 
-import com.github.eddyosos.minasandbox.mensagem_crua.MensagemCrua;
+import net.bytebuddy.asm.Advice;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoConnector;
@@ -9,27 +9,30 @@ import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.junit.jupiter.api.Test;
-import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class ServidorTest {
 
-    @MockBean(answer = Answers.CALLS_REAL_METHODS) IoHandler mockHandler;
+    @MockBean IoHandler mockHandler;
     @Autowired IoAcceptor acceptor;
 
     @Test
     void mensagemTexto() throws Exception {
         byte[] input = {0x0A, 0x10, (byte) 0XA1, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64, (byte) 0xDC, 0x0D};
         escreveFecha(input);
-        verify(mockHandler, timeout(1000)).messageReceived(any(), isA(MensagemCrua.class));
+        var captor = ArgumentCaptor.forClass(MensagemTexto.class);
+        verify(mockHandler, timeout(1000)).messageReceived(any(), captor.capture());
+        assertEquals("Hello World", captor.getValue().getTexto());
     }
 
     private void escreveFecha(byte[] input) throws InterruptedException {
