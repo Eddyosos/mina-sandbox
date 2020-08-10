@@ -49,12 +49,23 @@ class ServidorTest {
         assertFalse(mensagens.hasNext());
     }
 
+    @Test
+    void horaAtual() throws Exception {
+        byte[] input = {
+                0x0A, 0x16, (byte)0xA3, 0x41, 0x6D, 0x65, 0x72, 0x69, 0x63,
+                0x61, 0x2F, 0x53, 0x61, 0x6F, 0x5F, 0x50, 0x61, 0x75,
+                0x6C, 0x6F, (byte)0xCD, 0x0D};
+        escreveRecebeFecha(input);
+    }
+    private void escreveRecebeFecha(byte[] input) throws InterruptedException {
+        escreveRecebeFecha(input, null);
+    }
     private void escreveRecebeFecha(byte[] input, byte[] output) throws InterruptedException {
         IoConnector connector = new NioSocketConnector();
         MyIoHandlerAdapter handler = spy(new MyIoHandlerAdapter(input));
         connector.setHandler(handler);
         assertTrue(connector.connect(acceptor.getLocalAddress()).await(1000, TimeUnit.MILLISECONDS));
-        verify(handler, timeout(1000)).messageReceived(any(), eq(IoBuffer.wrap(output)));
+        verify(handler, timeout(1000)).messageReceived(any(), output != null ? eq(output) : any());
     }
 
     private static class MyIoHandlerAdapter extends IoHandlerAdapter {
