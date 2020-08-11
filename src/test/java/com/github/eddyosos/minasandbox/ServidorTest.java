@@ -65,7 +65,7 @@ class ServidorTest {
         MyIoHandlerAdapter handler = spy(new MyIoHandlerAdapter(input));
         connector.setHandler(handler);
         assertTrue(connector.connect(acceptor.getLocalAddress()).await(1000, TimeUnit.MILLISECONDS));
-        verify(handler, timeout(1000)).messageReceived(any(), output != null ? eq(output) : any());
+        verify(handler, timeout(1000)).messageReceived(any(), output != null ? eq(IoBuffer.wrap(output)) : any());
     }
 
     private static class MyIoHandlerAdapter extends IoHandlerAdapter {
