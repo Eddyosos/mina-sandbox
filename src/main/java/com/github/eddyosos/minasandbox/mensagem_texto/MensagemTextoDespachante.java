@@ -2,6 +2,7 @@ package com.github.eddyosos.minasandbox.mensagem_texto;
 
 import com.github.eddyosos.minasandbox.Servidor;
 import com.github.eddyosos.minasandbox.mensagem_ack.MensagemAck;
+import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
